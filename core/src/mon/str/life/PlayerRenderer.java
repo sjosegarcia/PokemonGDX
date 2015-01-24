@@ -1,5 +1,7 @@
 package mon.str.life;
 
+import mon.str.handlers.ExceptionHandler;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +31,11 @@ public class PlayerRenderer extends Actor {
 		stage = new Stage();
 		this.player = player;
 		Gdx.input.setInputProcessor(stage);
-		texture = new Texture(Gdx.files.internal("players/"+ this.player).toString());
+		try {
+			texture = new Texture(Gdx.files.internal("players/"+ this.player).toString());
+		} catch(Exception e) {
+			new ExceptionHandler(this.getClass().getName(), e);
+		}
 		textureRegion = TextureRegion.split(texture, texture.getWidth()/columns, texture.getHeight()/rows);
 		int index = 0;
 		for (int i = 0; i < rows; i++) {
@@ -49,8 +55,6 @@ public class PlayerRenderer extends Actor {
 		stage.act(Gdx.graphics.getDeltaTime());
 		movement();
 		map.getCamera().position.set(getX()+tileSize, getY()+tileSize, 0);
-		map.getCamera().update();
-		batch.setProjectionMatrix(map.getCamera().combined);
 		batch.draw(currentFrame, getX(), getY());
 	}
 	

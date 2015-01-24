@@ -10,7 +10,7 @@ public class Move {
 	private DamageCategories damageType;
 	
 	public Move() {
-		
+		//Got to create the constructor
 	}
 	
 	public int getId() {

@@ -8,6 +8,7 @@ import java.util.List;
 import mon.str.pokemon.Pokemon;
 
 public class PokemonParty {
+	
 	private List<Pokemon> party;
 	
 	public PokemonParty() {
@@ -18,20 +19,28 @@ public class PokemonParty {
 		return Collections.unmodifiableList(party);
 	}
 	
-	public void addPokemon(Pokemon pokemon) {
-		party.add(pokemon);
+	public boolean addPokemon(Pokemon pokemon) {
+		if (party.size() == 6) {
+			return false;
+		}
+		if (party.add(pokemon)) {
+			return true;
+		}
+		return false;
 	}
 	
-	public void removePokemon(Pokemon pokemon) {
-		party.remove(pokemon);
+	public boolean removePokemon(Pokemon pokemon) {
+		if (party.size() < 2) {
+			return false;
+		}
+		if (party.remove(pokemon)) {
+			return true;
+		}
+		return false;
 	}
 	
-	public void removePokemonId(int index) {
+	public void removePokemonIndex(int index) {
 		party.remove(index);
-	}
-	
-	public void clearParty() {
-		party.clear();
 	}
 	
 	public void removePokedexId(int pokemonId) {
@@ -43,9 +52,4 @@ public class PokemonParty {
 			i++;
 		}
 	}
-	
-	public boolean isEmpty() {
-		return party.isEmpty();
-	}
-	
 }
