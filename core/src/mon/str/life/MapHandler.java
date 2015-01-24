@@ -4,13 +4,14 @@ import mon.str.handlers.AbstractHandlers;
 import mon.str.handlers.ExceptionHandler;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class MapHandler extends AbstractHandlers {
 	
@@ -18,10 +19,13 @@ public class MapHandler extends AbstractHandlers {
 	private TiledMap map;
 	private String name;
 	private MapProperties mapProps;
-	private boolean[][] grid;
 	private static int tileSize = 16;
 	private OrthographicCamera camera;
-	
+	private Rectangle bounds;
+	private MapObjects mapObjects;
+	private float x, y;
+	private float width = Gdx.graphics.getWidth();
+	private float height = Gdx.graphics.getHeight();
 	public MapHandler(String name) {
 		this.name = name;
 		try {
@@ -29,21 +33,23 @@ public class MapHandler extends AbstractHandlers {
 		} catch(Exception e) {
 			new ExceptionHandler(this.getClass().getName(), e);
 		}
+		float width = Gdx.graphics.getWidth();
+		float height = Gdx.graphics.getHeight();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, width, height);
+		camera.update();
 		mapProps = map.getProperties();
 		renderMap = new OrthogonalTiledMapRenderer(map);
-		grid = new boolean[getWidth()/tileSize][getHeight()/tileSize];
+		mapObjects = new MapObjects();
+		bounds = new Rectangle();
 	}
 
 	public void load() {
 		renderMap.setView(camera);
 		renderMap.render();
-	}
-	
-	public void setCamera(Camera camera) {
-		this.camera = (OrthographicCamera) camera;
-		this.camera.setToOrtho(false);
-		this.camera.update();
-		
+		x = camera.position.x;
+		y = camera.position.y;
+		bounds.set(-x+(width/2), -y+(height/2), getHeight(), getHeight());
 	}
 	
 	public static int getTileSize() {
@@ -58,10 +64,6 @@ public class MapHandler extends AbstractHandlers {
 		return renderMap;
 	}
 		
-	public boolean[][] getGrid() {
-		return grid;
-	}
-		
 	public void setMapName(String name) {
 		this.name = name;
 	}
@@ -71,14 +73,30 @@ public class MapHandler extends AbstractHandlers {
 	}
 	
 	public int getWidth() {
-		return (Integer) mapProps.get("width");
+		return (Integer) mapProps.get("width")*(tileSize*2);
 	}
 
 	public int getHeight() {
-		return (Integer) mapProps.get("height");
+		return (Integer) mapProps.get("height")*(tileSize*2);
 	}
 		
 	public void dispose() {
 		((OrthogonalTiledMapRenderer) renderMap).dispose();
+	}
+
+	public Rectangle getBounds() {
+		return bounds;
+	}
+
+	public void setBounds(Rectangle bounds) {
+		this.bounds = bounds;
+	}
+
+	public MapObjects MapObjects() {
+		return mapObjects;
+	}
+
+	public void addMapObject(Actor actor) {
+		mapObjects.addMapObject(actor);
 	}
 }

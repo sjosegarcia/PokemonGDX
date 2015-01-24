@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -26,6 +27,7 @@ public class PlayerRenderer extends Actor {
 	private float speed = .50f;
 	private int tileSize = MapHandler.getTileSize();
 	private MapHandler map;
+	private Rectangle bounds;
 	
 	public PlayerRenderer(String player) {
 		stage = new Stage();
@@ -46,15 +48,19 @@ public class PlayerRenderer extends Actor {
 		animation = new Animation(1, frames);
 		currentFrame = animation.getKeyFrame(0);
 		moveAction = new MoveToAction();
-		moveAction.setPosition(Gdx.graphics.getWidth()/2-MapHandler.getTileSize(), Gdx.graphics.getHeight()/2-MapHandler.getTileSize());
+		System.out.println(Gdx.graphics.getWidth()/currentFrame.getRegionWidth() + " " + Gdx.graphics.getWidth()/currentFrame.getRegionHeight());
+		moveAction.setPosition(Gdx.graphics.getWidth()/2 + (currentFrame.getRegionHeight()/2), Gdx.graphics.getHeight()/2 + (currentFrame.getRegionHeight()/2));
 		addAction(moveAction);
+		bounds = new Rectangle(moveAction.getX(), moveAction.getY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
 		stage.addActor(this);
 	}
 		
 	public void draw(Batch batch, float alpha) {
 		stage.act(Gdx.graphics.getDeltaTime());
 		movement();
-		map.getCamera().position.set(getX()+tileSize, getY()+tileSize, 0);
+	//	map.getCamera().position.set(getX()+tileSize, getY()+tileSize, 0);
+		map.getCamera().update();
+		batch.setProjectionMatrix(map.getCamera().combined);
 		batch.draw(currentFrame, getX(), getY());
 	}
 	
@@ -66,9 +72,10 @@ public class PlayerRenderer extends Actor {
 		this.map = map;
 	}
 	
-	public void movement() { // move this to movement handler
+	public void movement() {
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 			if (!getActions().contains(moveAction, true)) {
+				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goRight());
 				moveAction.setPosition(getX()+tileSize*2, getY());
@@ -77,6 +84,7 @@ public class PlayerRenderer extends Actor {
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
 			if (!getActions().contains(moveAction, true)) {
+				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goDown());
 				moveAction.setPosition(getX(), getY()-tileSize*2);
@@ -85,14 +93,16 @@ public class PlayerRenderer extends Actor {
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.A)) {
 			if (!getActions().contains(moveAction, true)) {
+				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goLeft());
 				moveAction.setPosition(getX()-tileSize*2, getY());
 				moveAction.setDuration(speed);
-				addAction(moveAction);	
+				addAction(moveAction);
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.W)) {
 			if (!getActions().contains(moveAction, true)) {
+				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goUp());
 				moveAction.setPosition(getX(), getY()+tileSize*2);
@@ -101,8 +111,16 @@ public class PlayerRenderer extends Actor {
 			}
 		}
 	}
-	
+		
 	public void dispose() {
 		stage.dispose();
+	}
+
+	public Rectangle getBounds() {
+		return bounds;
+	}
+	
+	public void setBounds(Rectangle bounds) {
+		this.bounds = bounds;
 	}
 }

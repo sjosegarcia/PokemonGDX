@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class MapObjects {
 	
 	private List<Actor> actors;
-		
-	public MapObjects(Actor actor) {
+	
+	public MapObjects() {
 		actors = new ArrayList<>();
 	}
 
@@ -28,6 +28,10 @@ public class MapObjects {
 	
 	public void removeActorId(int id) {
 		actors.remove(id);
+	}
+	
+	public Actor getActor(int index) {
+		return actors.get(index);
 	}
 	
 	public void removeAllMapObjects() {
