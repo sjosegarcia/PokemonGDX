@@ -1,5 +1,6 @@
 package mon.str.life;
 
+import mon.str.constants.Constants;
 import mon.str.handlers.AbstractHandlers;
 import mon.str.handlers.ExceptionHandler;
 
@@ -11,7 +12,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MapHandler extends AbstractHandlers {
 	
@@ -19,13 +21,12 @@ public class MapHandler extends AbstractHandlers {
 	private TiledMap map;
 	private String name;
 	private MapProperties mapProps;
-	private static int tileSize = 16;
 	private OrthographicCamera camera;
 	private Rectangle bounds;
 	private MapObjects mapObjects;
 	private float x, y;
-	private float width = Gdx.graphics.getWidth();
-	private float height = Gdx.graphics.getHeight();
+	private Viewport viewport;
+	
 	public MapHandler(String name) {
 		this.name = name;
 		try {
@@ -33,29 +34,37 @@ public class MapHandler extends AbstractHandlers {
 		} catch(Exception e) {
 			new ExceptionHandler(this.getClass().getName(), e);
 		}
-		float width = Gdx.graphics.getWidth();
-		float height = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, width, height);
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.update();
 		mapProps = map.getProperties();
+		viewport = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 		renderMap = new OrthogonalTiledMapRenderer(map);
 		mapObjects = new MapObjects();
 		bounds = new Rectangle();
 	}
 
-	public void load() {
+	public void update() {
 		renderMap.setView(camera);
 		renderMap.render();
-		x = camera.position.x;
-		y = camera.position.y;
-		bounds.set(-x+(width/2), -y+(height/2), getHeight(), getHeight());
+		x = -camera.position.x;
+		y = -camera.position.y;
+		bounds.set(x+(viewport.getWorldWidth()/2), y+(viewport.getWorldHeight()/2), getHeight(), getHeight());
 	}
 	
-	public static int getTileSize() {
-		return tileSize;
+	public MapProperties getMapPropertiesByName(String name) {
+		try {
+			return new TmxMapLoader().load(Gdx.files.internal("maps/"+ name).toString()).getProperties();
+		} catch(Exception e) {
+			new ExceptionHandler(this.getClass().getName(), e);
+		}
+		return null;
 	}
-	
+
+	public MapProperties getMapProperties() {
+		return mapProps;
+	}
+		
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
@@ -73,30 +82,66 @@ public class MapHandler extends AbstractHandlers {
 	}
 	
 	public int getWidth() {
-		return (Integer) mapProps.get("width")*(tileSize*2);
+		return (Integer) mapProps.get("width")*Constants.pixel;
 	}
 
 	public int getHeight() {
-		return (Integer) mapProps.get("height")*(tileSize*2);
+		return (Integer) mapProps.get("height")*Constants.pixel;
+	}
+	
+	public int getTileWidth() {
+		return (Integer) mapProps.get("width");
+	}
+
+	public int getTileHeight() {
+		return (Integer) mapProps.get("height");
 	}
 		
 	public void dispose() {
 		((OrthogonalTiledMapRenderer) renderMap).dispose();
+	//	for (MapObjects mo : mapObjects) {
+		//after I make this "life object super class", make sure to add a dispose method, so we can dispose of all the objects with this one piece of code.	
+	//	}
 	}
 
 	public Rectangle getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
-	}
-
-	public MapObjects MapObjects() {
+	public MapObjects getMapObjects() {
 		return mapObjects;
 	}
 
-	public void addMapObject(Actor actor) {
-		mapObjects.addMapObject(actor);
+	public void addMapObject(PlayerRenderer player) {
+		player.setMap(this);
+		float divideWidth = player.getPlayerFrame().getRegionWidth() / (Constants.pixel / 2);
+		float divideHeight = player.getPlayerFrame().getRegionHeight() / (Constants.pixel / 2);
+		float checkWidth = player.getTexture().getWidth() / (Constants.pixel / 2);
+		float offsetX = 0;
+		float offsetY = 0;
+
+		if (divideWidth % 2 == 1) {
+			offsetX -=(Constants.pixel / (Constants.pixel / 2));
+		}
+		
+		if (checkWidth >= (Constants.pixel / 2)-1) { //TODO this is for now, until I can find a better way.
+			offsetX-= checkWidth;
+		}
+		
+		if (divideHeight % 2 == 1) {
+			offsetY -=(Constants.pixel / (Constants.pixel / 2));
+		}
+		
+		player.setPlayerPosition(-x + offsetX, -y + offsetY);
+		player.getBounds().set(x + (viewport.getWorldWidth() / 2) , y + (viewport.getWorldHeight() / 2), player.getPlayerFrame().getRegionWidth(), player.getPlayerFrame().getRegionHeight());
+		mapObjects.addMapObject(player); //Need to make the actor class part of a "abstract life object class" and make PlayerRenderer a sub-class of that class to 
+	}
+
+	public Viewport getViewport() {
+		return viewport;
+	}
+
+	public void setViewport(Viewport viewport) {
+		this.viewport = viewport;
 	}
 }

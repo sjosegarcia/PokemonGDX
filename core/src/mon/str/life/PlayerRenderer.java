@@ -1,5 +1,6 @@
 package mon.str.life;
 
+import mon.str.constants.Constants;
 import mon.str.handlers.ExceptionHandler;
 
 import com.badlogic.gdx.Gdx;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class PlayerRenderer extends Actor {
 	
@@ -25,12 +27,12 @@ public class PlayerRenderer extends Actor {
 	private Animation animation;
 	private String player;
 	private float speed = .50f;
-	private int tileSize = MapHandler.getTileSize();
 	private MapHandler map;
 	private Rectangle bounds;
+	private CollisionDetection cd;
 	
 	public PlayerRenderer(String player) {
-		stage = new Stage();
+		stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		this.player = player;
 		Gdx.input.setInputProcessor(stage);
 		try {
@@ -48,71 +50,82 @@ public class PlayerRenderer extends Actor {
 		animation = new Animation(1, frames);
 		currentFrame = animation.getKeyFrame(0);
 		moveAction = new MoveToAction();
-		System.out.println(Gdx.graphics.getWidth()/currentFrame.getRegionWidth() + " " + Gdx.graphics.getWidth()/currentFrame.getRegionHeight());
-		moveAction.setPosition(Gdx.graphics.getWidth()/2 + (currentFrame.getRegionHeight()/2), Gdx.graphics.getHeight()/2 + (currentFrame.getRegionHeight()/2));
-		addAction(moveAction);
-		bounds = new Rectangle(moveAction.getX(), moveAction.getY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
 		stage.addActor(this);
+		bounds = new Rectangle();
 	}
 		
 	public void draw(Batch batch, float alpha) {
 		stage.act(Gdx.graphics.getDeltaTime());
 		movement();
-	//	map.getCamera().position.set(getX()+tileSize, getY()+tileSize, 0);
+		map.getCamera().position.set(getX(), getY(), 0);
 		map.getCamera().update();
 		batch.setProjectionMatrix(map.getCamera().combined);
 		batch.draw(currentFrame, getX(), getY());
+	}
+	
+	public void setPlayerPosition(float x, float y) {
+		moveAction.setPosition(x, y);
+		addAction(moveAction);
 	}
 	
 	public Stage getStage() {
 		return stage;
 	}
 	
-	public void getMap(MapHandler map) {
+	public void setMap(MapHandler map) {
 		this.map = map;
+		cd = new CollisionDetection(this);
+	}
+	
+	public MapHandler getMap() {
+		return map;
+	}
+	
+	public TextureRegion getPlayerFrame() {
+		return currentFrame;
 	}
 	
 	public void movement() {
+		//if (!cd.canMove()) {
+	//		return; // for now
+	//	}
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 			if (!getActions().contains(moveAction, true)) {
-				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goRight());
-				moveAction.setPosition(getX()+tileSize*2, getY());
+				moveAction.setPosition(getX()+Constants.pixel, getY());
 				moveAction.setDuration(speed);
 				addAction(moveAction);
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
 			if (!getActions().contains(moveAction, true)) {
-				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goDown());
-				moveAction.setPosition(getX(), getY()-tileSize*2);
+				moveAction.setPosition(getX(), getY()-Constants.pixel);
 				moveAction.setDuration(speed);
-				addAction(moveAction);	
+				addAction(moveAction);
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.A)) {
 			if (!getActions().contains(moveAction, true)) {
-				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goLeft());
-				moveAction.setPosition(getX()-tileSize*2, getY());
+				moveAction.setPosition(getX()-Constants.pixel, getY());
 				moveAction.setDuration(speed);
 				addAction(moveAction);
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.W)) {
 			if (!getActions().contains(moveAction, true)) {
-				System.out.println(getX() + " " + getY());
 				moveAction.reset();
 				currentFrame = animation.getKeyFrame(MovementHandler.goUp());
-				moveAction.setPosition(getX(), getY()+tileSize*2);
+				moveAction.setPosition(getX(), getY()+Constants.pixel);
 				moveAction.setDuration(speed);
-				addAction(moveAction);	
+				addAction(moveAction);
 			}
 		}
 	}
 		
 	public void dispose() {
+		texture.dispose();
 		stage.dispose();
 	}
 
@@ -120,7 +133,8 @@ public class PlayerRenderer extends Actor {
 		return bounds;
 	}
 	
-	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
+	public Texture getTexture() {
+		return texture;
 	}
+
 }

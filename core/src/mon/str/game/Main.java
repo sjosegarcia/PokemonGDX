@@ -19,20 +19,20 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void create() {
 		map = new MapHandler("test2.tmx");
-		player = new PlayerRenderer("Red.png");
-		player.getMap(map);
+		player = new PlayerRenderer("NPC 01.png");
+		player.setMap(map);
 		map.addMapObject(player);
 		ren = new ShapeRenderer();
 	}
 
 	@Override
 	public void render() {
-		Gdx.graphics.setTitle(Constants.gameName + ": " + Gdx.graphics.getFramesPerSecond());
+		Gdx.graphics.setTitle(Constants.gameName + " FPS: " + Gdx.graphics.getFramesPerSecond());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
-		map.load();
+		map.update();
 		player.getStage().draw();
 		ren.begin(ShapeType.Line);
 		ren.setColor(Color.BLUE);
@@ -46,5 +46,10 @@ public class Main extends ApplicationAdapter {
 	public void dispose() {
 		map.dispose();
 		player.dispose();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		map.getViewport().update(width, height);
 	}
 }
