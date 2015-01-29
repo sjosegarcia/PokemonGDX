@@ -114,25 +114,13 @@ public class MapHandler extends AbstractHandlers {
 
 	public void addMapObject(PlayerRenderer player) {
 		player.setMap(this);
-		float divideWidth = player.getPlayerFrame().getRegionWidth() / (Constants.pixel / 2);
-		float divideHeight = player.getPlayerFrame().getRegionHeight() / (Constants.pixel / 2);
 		float checkWidth = player.getTexture().getWidth() / (Constants.pixel / 2);
 		float offsetX = 0;
 		float offsetY = 0;
-
-		if (divideWidth % 2 == 1) {
-			offsetX -=(Constants.pixel / (Constants.pixel / 2));
-		}
-		
 		if (checkWidth >= (Constants.pixel / 2)-1) { //TODO this is for now, until I can find a better way.
 			offsetX-= checkWidth;
 		}
-		
-		if (divideHeight % 2 == 1) {
-			offsetY -=(Constants.pixel / (Constants.pixel / 2));
-		}
-		
-		player.setPlayerPosition(-x + offsetX, -y + offsetY);
+		player.setPlayerPosition(-x + offsetX, -y);
 		player.getBounds().set(x + (viewport.getWorldWidth() / 2) , y + (viewport.getWorldHeight() / 2), player.getPlayerFrame().getRegionWidth(), player.getPlayerFrame().getRegionHeight());
 		mapObjects.addMapObject(player); //Need to make the actor class part of a "abstract life object class" and make PlayerRenderer a sub-class of that class to 
 	}

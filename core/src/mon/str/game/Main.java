@@ -19,7 +19,7 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void create() {
 		map = new MapHandler("test2.tmx");
-		player = new PlayerRenderer("NPC 01.png");
+		player = new PlayerRenderer("Brendan.png");
 		player.setMap(map);
 		map.addMapObject(player);
 		ren = new ShapeRenderer();
