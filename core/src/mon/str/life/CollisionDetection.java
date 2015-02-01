@@ -1,5 +1,7 @@
 package mon.str.life;
 
+import mon.str.handlers.MapHandler;
+
 import com.badlogic.gdx.Gdx;
 
 public class CollisionDetection {
@@ -22,12 +24,12 @@ public class CollisionDetection {
 	}
 	
 	public boolean canMove() {
-		if (player.getX()-player.getPlayerFrame().getRegionWidth() <= map.getBounds().x-(Gdx.graphics.getWidth()/2) || 
-				player.getY()-player.getPlayerFrame().getRegionHeight() <= map.getBounds().y-(Gdx.graphics.getHeight()/2)) {
+		if (player.getX()-player.getLifeFrame().getRegionWidth() <= map.getBounds().x-(Gdx.graphics.getWidth()/2) || 
+				player.getY()-player.getLifeFrame().getRegionHeight() <= map.getBounds().y-(Gdx.graphics.getHeight()/2)) {
 			return false;
 		}
 		
-		if (player.getX()+player.getPlayerFrame().getRegionWidth() >= map.getBounds().x+(Gdx.graphics.getWidth())) { 
+		if (player.getX()+player.getLifeFrame().getRegionWidth() >= map.getBounds().x+(Gdx.graphics.getWidth())) { 
 			System.out.println(map.getBounds().x);
 			return false;
 		}

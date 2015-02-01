@@ -2,6 +2,9 @@ package mon.str.life;
 
 import mon.str.constants.Constants;
 import mon.str.handlers.ExceptionHandler;
+import mon.str.handlers.LifeHandler;
+import mon.str.handlers.MapHandler;
+import mon.str.handlers.MovementHandler.Movement;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -10,12 +13,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-public class PlayerRenderer extends Actor {
+public class PlayerRenderer extends LifeHandler {
 	
 	private Texture texture;
 	private Stage stage;
@@ -26,13 +27,13 @@ public class PlayerRenderer extends Actor {
 	private TextureRegion currentFrame;
 	private Animation animation;
 	private String player;
-	private float speed = .50f;
+	private float speed = .45f;
 	private MapHandler map;
 	private Rectangle bounds;
 	private CollisionDetection cd;
 	
 	public PlayerRenderer(String player) {
-		stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		stage = new Stage();
 		this.player = player;
 		Gdx.input.setInputProcessor(stage);
 		try {
@@ -63,28 +64,34 @@ public class PlayerRenderer extends Actor {
 		batch.draw(currentFrame, getX(), getY());
 	}
 	
-	public void setPlayerPosition(float x, float y) {
+	@Override
+	public void setLifePosition(float x, float y) {
 		moveAction.setPosition(x, y);
 		addAction(moveAction);
 	}
 	
+	@Override
 	public Stage getStage() {
 		return stage;
 	}
 	
+	@Override
 	public void setMap(MapHandler map) {
 		this.map = map;
 		cd = new CollisionDetection(this);
 	}
 	
+	@Override
 	public MapHandler getMap() {
 		return map;
 	}
 	
-	public TextureRegion getPlayerFrame() {
+	@Override
+	public TextureRegion getLifeFrame() {
 		return currentFrame;
 	}
 	
+	@Override
 	public void movement() {
 		//if (!cd.canMove()) {
 	//		return; // for now
@@ -92,7 +99,7 @@ public class PlayerRenderer extends Actor {
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 			if (!getActions().contains(moveAction, true)) {
 				moveAction.reset();
-				currentFrame = animation.getKeyFrame(MovementHandler.goRight());
+				currentFrame = animation.getKeyFrame(Movement.goRight());
 				moveAction.setPosition(getX()+Constants.pixel, getY());
 				moveAction.setDuration(speed);
 				addAction(moveAction);
@@ -100,7 +107,7 @@ public class PlayerRenderer extends Actor {
 		} else if (Gdx.input.isKeyPressed(Keys.S)) {
 			if (!getActions().contains(moveAction, true)) {
 				moveAction.reset();
-				currentFrame = animation.getKeyFrame(MovementHandler.goDown());
+				currentFrame = animation.getKeyFrame(Movement.goDown());
 				moveAction.setPosition(getX(), getY()-Constants.pixel);
 				moveAction.setDuration(speed);
 				addAction(moveAction);
@@ -108,7 +115,7 @@ public class PlayerRenderer extends Actor {
 		} else if (Gdx.input.isKeyPressed(Keys.A)) {
 			if (!getActions().contains(moveAction, true)) {
 				moveAction.reset();
-				currentFrame = animation.getKeyFrame(MovementHandler.goLeft());
+				currentFrame = animation.getKeyFrame(Movement.goLeft());
 				moveAction.setPosition(getX()-Constants.pixel, getY());
 				moveAction.setDuration(speed);
 				addAction(moveAction);
@@ -116,23 +123,26 @@ public class PlayerRenderer extends Actor {
 		} else if (Gdx.input.isKeyPressed(Keys.W)) {
 			if (!getActions().contains(moveAction, true)) {
 				moveAction.reset();
-				currentFrame = animation.getKeyFrame(MovementHandler.goUp());
+				currentFrame = animation.getKeyFrame(Movement.goUp());
 				moveAction.setPosition(getX(), getY()+Constants.pixel);
 				moveAction.setDuration(speed);
 				addAction(moveAction);
 			}
 		}
 	}
-		
+	
+	@Override
 	public void dispose() {
 		texture.dispose();
 		stage.dispose();
 	}
-
+	
+	@Override
 	public Rectangle getBounds() {
 		return bounds;
 	}
 	
+	@Override
 	public Texture getTexture() {
 		return texture;
 	}

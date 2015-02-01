@@ -4,38 +4,38 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import mon.str.handlers.LifeHandler;
 
 public class MapObjects {
 	
-	private List<Actor> actors;
+	private List<LifeHandler> mapLife;
 	
 	public MapObjects() {
-		actors = new ArrayList<>();
+		mapLife = new ArrayList<>();
 	}
 
-	public Collection<Actor> getMapObjects() {
-		return Collections.unmodifiableList(actors);
+	public Collection<LifeHandler> getMapObjects() {
+		return Collections.unmodifiableList(mapLife);
 	}
 	
-	public void addMapObject(Actor actor) {
-		actors.add(actor);
+	public void addMapObject(LifeHandler life) {
+		mapLife.add(life);
 	}
 	
-	public void removeActor(Actor actor) {
-		actors.remove(actor);
+	public void removeLife(LifeHandler life) {
+		mapLife.remove(life);
 	}
 	
 	public void removeActorId(int id) {
-		actors.remove(id);
+		mapLife.remove(id);
 	}
 	
-	public Actor getActor(int index) {
-		return actors.get(index);
+	public LifeHandler getLife(int index) {
+		return mapLife.get(index);
 	}
 	
 	public void removeAllMapObjects() {
-		actors.clear();
+		mapLife.clear();
 	}
 	
 }
