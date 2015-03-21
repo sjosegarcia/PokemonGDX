@@ -27,7 +27,9 @@ public class LifeHandler extends Actor {
 		return null;
 	}
 	
-	public void movement() {}
+	public boolean movement() {
+		return false;
+	}
 	
 	public void dispose() {}
 	
@@ -37,6 +39,43 @@ public class LifeHandler extends Actor {
 	
 	public Texture getTexture() {
 		return null;
+	}	
+	
+	public boolean isFacingDown() {
+		return false;
 	}
 	
+	public boolean isFacingLeft() {
+		return false;
+	}
+	
+	public boolean isFacingRight() {
+		return false;
+	}
+	
+	public boolean isFacingUp() {
+		return false;
+	}
+	
+	public boolean translateX() {
+		return false;
+	}
+	
+	public boolean translateY() {
+		return false;
+	}
+	
+	public boolean isIdleFrame() {
+		return false;
+	}
+	
+	public boolean isTranslating() {
+		return translateX() || translateY();
+	}
+	
+	public void setMoveAnimation(int moveAnimation) {}
+	
+	public int getMoveAnimation() {
+		return 0;
+	}
 }

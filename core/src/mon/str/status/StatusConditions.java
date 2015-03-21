@@ -7,5 +7,4 @@ public enum StatusConditions {
 	POISON,
 	PARALYSIS,
 	FREEZE;
-
 }

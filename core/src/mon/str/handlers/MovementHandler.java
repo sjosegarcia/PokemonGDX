@@ -17,55 +17,21 @@ public enum MovementHandler {
 		return direction;
 	}
 	
-	public class Movement {
+	public static class Movement {
 		
-		private int direction;
-		
-		public Movement(){
-			this.direction = 0;
-		}
-		
-		public Movement(int direction) {
-			this.direction = direction;
-		}
-		
-		public void setDirection(int direction) {
-			this.direction = direction;
-		}
-		
-		public int getDirection() {
-			return direction;
-		}
-		
-		public boolean isFacingDown(int direction) {
-			return direction == goDown();
-		}
-		
-		public boolean isFacingLeft(int direction) {
-			return direction == goLeft();
-		}
-		
-		public boolean isFacingRight(int direction) {
-			return direction == goRight();
-		}
-		
-		public boolean isFacingUp(int direction) {
-			return direction == goUp();
-		}
-		
-		public int goDown() {
+		public static int goDown() {
 			return MovementHandler.DOWN.getDirection();
 		}
 		
-		public int goLeft() {
+		public static int goLeft() {
 			return MovementHandler.LEFT.getDirection();
 		}
 		
-		public int goRight() {
+		public static int goRight() {
 			return MovementHandler.RIGHT.getDirection();
 		}
 		
-		public int goUp() {
+		public static int goUp() {
 			return MovementHandler.UP.getDirection();
 		}
 		
