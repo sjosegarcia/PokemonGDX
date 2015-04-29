@@ -57,11 +57,11 @@ public class LifeHandler extends Actor {
 		return false;
 	}
 	
-	public boolean translateX() {
+	public boolean translatedX() {
 		return false;
 	}
 	
-	public boolean translateY() {
+	public boolean translatedY() {
 		return false;
 	}
 	
@@ -69,8 +69,20 @@ public class LifeHandler extends Actor {
 		return false;
 	}
 	
+	public boolean hasTranslated() {
+		return translatedX() || translatedY();
+	}
+	
+	public boolean translatingX() {
+		return false;
+	}
+	
 	public boolean isTranslating() {
-		return translateX() || translateY();
+		return false;
+	}
+	
+	public boolean translatingY() {
+		return false;
 	}
 	
 	public void setMoveAnimation(int moveAnimation) {}

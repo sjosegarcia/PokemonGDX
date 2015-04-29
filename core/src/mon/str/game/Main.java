@@ -3,6 +3,7 @@ package mon.str.game;
 import mon.str.constants.Constants;
 import mon.str.handlers.MapHandler;
 import mon.str.life.PlayerRenderer;
+import mon.str.loader.PokemonTypeLoader;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,8 @@ public class Main extends ApplicationAdapter {
 		player = new PlayerRenderer("red.png");
 		player.setMap(map);
 		map.addMapObject(player);
+		PokemonTypeLoader type = new PokemonTypeLoader();
+		//PokemonLoader pl = new PokemonLoader();
 	}
 
 	@Override

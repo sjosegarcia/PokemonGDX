@@ -1,7 +1,8 @@
 package mon.str.pokemon;
 
 public enum PokemonTypes {
-
+	
+	UNKOWN("Unknown"),
 	NORMAL("Normal"),
 	FIGHTING("Fighting"),
 	PSYCHIC("Psychic"),
@@ -19,7 +20,8 @@ public enum PokemonTypes {
 	ROCK("Rock"),
 	GROUND("Ground"),
 	DARK("Dark"),
-	POISON("Poison");	
+	POISON("Poison"),
+	SHADOW("Shadow");	
 	
 	private String type;
 	
@@ -30,4 +32,14 @@ public enum PokemonTypes {
 	public String getType() {
 		return type;
 	}
+	
+	public PokemonTypes getTypeByString(String typing) {
+		for (PokemonTypes types : PokemonTypes.values()) {
+			if (types.getType().equalsIgnoreCase(typing)) {
+				return types;
+			}
+		}
+		return PokemonTypes.UNKOWN;
+	}
+	
 }

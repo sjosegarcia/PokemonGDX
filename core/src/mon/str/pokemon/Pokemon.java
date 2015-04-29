@@ -4,10 +4,9 @@ import java.util.EnumMap;
 
 public class Pokemon {
 
-	private PokemonTypeManipulator[] type;
+	private PokemonTypes[] type;
 	private EnumMap<PokemonStats, Integer> ev = new EnumMap<PokemonStats, Integer>(PokemonStats.class);
 	private EnumMap<PokemonStats, Integer> iv = new EnumMap<PokemonStats, Integer>(PokemonStats.class);
-	private PokemonNatures nature;
 	private PokemonAbilities ability;
 	private PokemonAbilities hiddenAbility;
 	private int pokedexId;
@@ -22,16 +21,22 @@ public class Pokemon {
 	private String habitat;
 	private String species;
 	private String pokedexDescription;
+	private String genderRate;
+	private String growthRate;
+	private int playerY;
+	private int enemyY;
+	private int altitude;
 	
-	public Pokemon(String pokemonName, String internalPokemonName, PokemonTypeManipulator[] type, PokemonNatures nature, EnumMap<PokemonStats, Integer> iv, 
+	public Pokemon(String pokemonName, String internalPokemonName, PokemonTypes[] type, EnumMap<PokemonStats, Integer> iv, String genderRate, String growthRate,
 			int baseExp, EnumMap<PokemonStats, Integer> ev, int rareness, int happiness, PokemonAbilities ability, PokemonAbilities hiddenAbility, int numStepsToHatch,
-			int height, int weight, String color, String habitat, int pokedexId, String species, String pokedexDescription) {
+			int height, int weight, String color, String habitat, int pokedexId, String species, String pokedexDescription, int playerY, int enemyY, int altitude) {
 		this.pokedexId = pokedexId;
 		this.pokemonName = pokemonName;
 		this.internalPokemonName = internalPokemonName;
-		this.nature = nature;
 		this.type = type;
 		this.iv = iv;
+		this.genderRate = genderRate;
+		this.growthRate = growthRate;
 		this.baseExp = baseExp;
 		this.ev = ev;
 		this.rareness = rareness;
@@ -47,7 +52,7 @@ public class Pokemon {
 		this.pokedexDescription = pokedexDescription;
 	}	
 	
-	public PokemonTypeManipulator[] getType() {
+	public PokemonTypes[] getType() {
 		return type;
 	}
 
@@ -65,14 +70,6 @@ public class Pokemon {
 
 	public void setEv(EnumMap<PokemonStats, Integer> ev) {
 		this.ev = ev;
-	}
-
-	public PokemonNatures getNature() {
-		return nature;
-	}
-
-	public void setNature(PokemonNatures nature) {
-		this.nature = nature;
 	}
 
 	public int getPokedexId() {
@@ -193,5 +190,45 @@ public class Pokemon {
 
 	public void setPokedexDescription(String pokedexDescription) {
 		this.pokedexDescription = pokedexDescription;
+	}
+
+	public String getGenderRate() {
+		return genderRate;
+	}
+
+	public void setGenderRate(String genderRate) {
+		this.genderRate = genderRate;
+	}
+
+	public String getGrowthRate() {
+		return growthRate;
+	}
+
+	public void setGrowthRate(String growthRate) {
+		this.growthRate = growthRate;
+	}
+
+	public int getPlayerY() {
+		return playerY;
+	}
+
+	public void setPlayerY(int playerY) {
+		this.playerY = playerY;
+	}
+
+	public int getEnemyY() {
+		return enemyY;
+	}
+
+	public void setEnemyY(int enemyY) {
+		this.enemyY = enemyY;
+	}
+
+	public int getAltitude() {
+		return altitude;
+	}
+
+	public void setAltitude(int altitude) {
+		this.altitude = altitude;
 	}
 }
